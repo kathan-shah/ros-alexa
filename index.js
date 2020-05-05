@@ -76,13 +76,27 @@ app.intent("MoveRoom", {
   "utterances": ["move to room {-|num}", "go to room {-|num}", "go to {-|name} room"]
 },
 function(req,res){
-  console.log('robo-care: PublishTwistIntent - publishing Move...')
-  var num = req.slot("num");
+  console.log('robo-care: PublishMoveIntent - publishing Move...')
+  var num = req.slots["num"];
+  var name = req.slot("name");
+  if(num.value){
+    move_room_topic.publish(num.value);
+    console.log('robo-care: PublishMoveIntent - publishing num');
 
-  move_room_topic.publish(num);
-  console.log('robo-care: PublishTwistIntent - done publishing');
+    res.say("Move to room " + num.value);
 
-  res.say("Move to room " + num);
+  }
+  else{
+    move_room_topic.publish(name);
+    console.log('robo-care: PublishMoveIntent - publishing name');
+
+    res.say("Move to " +name+ " room");
+
+  }
+
+  console.log('robo-care: PublishMoveIntent - done publishing');
+
+
 });
 
 // ------------------ //
