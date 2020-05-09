@@ -72,29 +72,40 @@ app.intent("PublishTwistIntent", {
 
 app.intent("MoveRoom", {
   "slots": {"num" : "AMAZON.NUMBER",
-            "name" : "AMAZON.US_FIRST_NAME"},
+            },
   "utterances": ["move to room {-|num}", "go to room {-|num}", "go to {-|name} room"]
 },
 function(req,res){
   console.log('robo-care: PublishMoveIntent - publishing Move...')
-  var num = req.slots["num"];
-  var name = req.slot("name");
-  if(num.value){
-    move_room_topic.publish(num.value);
+  var num = req.slot("num");
+
+    move_room_topic.publish(num);
     console.log('robo-care: PublishMoveIntent - publishing num');
 
-    res.say("Move to room " + num.value);
-
-  }
-  else{
-    move_room_topic.publish(name);
-    console.log('robo-care: PublishMoveIntent - publishing name');
-
-    res.say("Move to " +name+ " room");
-
-  }
+    res.say("Move to room " + num);
 
   console.log('robo-care: PublishMoveIntent - done publishing');
+
+
+});
+
+//app.customSlot("object", ["cup", "mug", "plate", "spoon"]);
+
+app.intent("FindObj", {
+  "slots": {"obj" : "object",
+            },
+  "utterances": ["Find {-|obj}"]
+},
+function(req,res){
+  console.log('robo-care: PublishFindIntent - publishing Find...')
+  var obj = req.slot("obj"); // try using _.isempty function
+
+    move_room_topic.publish(obj);
+    console.log('robo-care: PublishFindIntent - publishing obj');
+
+    res.say("Finding " + obj);
+
+  console.log('robo-care: PublishFindIntent - done publishing');
 
 
 });
